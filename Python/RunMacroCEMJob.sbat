@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#SBATCH --job-name=macrocemruns_eim_2
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=4 
+#SBATCH --ntasks-per-node=1
+#SBATCH --mem=50GB 
+#SBATCH --time=26:00:00
+#SBATCH --mail-type=END,FAIL
+#SBATCH --account=mtcraig98
+#SBATCH --partition=standard
+
+module load python3.9-anaconda/2021.11
+source /home/owusup/Projects/MacroCEM/py38gams/bin/activate
+module load RestrictedLicense cplex/20.1.0
+export PYTHONPATH=/home/owusup/gams40_4/apifiles/Python/api_39
+export PYTHONPATH=/home/owusup/gams40_4/apifiles/Python/gams:$PYTHONPATH
+
+# Set inputs to Python script
+interconn=$1
+co2Cap=$2
+solarGenFracOfDemand=$3
+windGenFracOfDemand=$4
+scenario_key=$5
+economic_impacts=$6
+eim_measure=$7
+tx_distance=$8
+capex_discount_rate=$9
+costWgt=$10
+
+echo "Running: $interconn $co2Cap $solarGenFracOfDemand $windGenFracOfDemand $scenario_key $economic_impacts $eim_measure $tx_distance $capex_discount_rate $costWgt"
+
+# Echo commands to stdout
+set -x
+
+# Set working dir
+export TMPDIR=$(mktemp -d /tmp/owusup.$SLURM_JOBID.XXXXXX)
+echo "Temporary directory: $TMPDIR"
+cd $TMPDIR
+
+# Copy files to working directory
+cp -rf /home/owusup/Projects/MacroCEM/Python_EIM/* $TMPDIR
+
+# Run script with inputs
+python $TMPDIR/RunMacroCEM.py $interconn $co2Cap $solarGenFracOfDemand $windGenFracOfDemand $scenario_key $economic_impacts $eim_measure $tx_distance $capex_discount_rate $costWgt
+
+# Create results folder
+resultsFolder="Results_${scenario_key}_SGenFrac${solarGenFracOfDemand}_WGenFrac${windGenFracOfDemand}_${interconn}_CO2Final_${co2Cap}_${economic_impacts}_${eim_measure}_${tx_distance}_CAPEX_${capex_discount_rate}_costWgt_${costWgt}"
+echo "Creating results directory: $resultsFolder"
+mkdir -p $TMPDIR/$resultsFolder
+
+# Copy output folder to persistent space
+echo "Copying results..."
+cp -rf $TMPDIR/$resultsFolder/ /nfs/turbo/seas-mtcraig/papa_yaw/EIM
+
+# Remove temporary directory
+rm -rf $TMPDIR
+
+exit

@@ -1,0 +1,70 @@
+3. Agric photovoltaics lit review
+
+9. Structure results and discussion
+
+6. Feedback from Michael on property taxes - done
+8. Sarah's economic impact with Steven's integrations - done
+1. solar investments by state - done
+2. All investments by state - done
+5. Email Gilbert on Paper recommendation - done
+4. run model with RPS and analyze results - ongoing
+7. Reading Daniel Paper
+
+We cannot make the distinction between purchased vs leased land in our planning model. We can rather choose to run one of them. Or we can 
+1. Run purchased % vs leased percentage for future developments based on historical figures.
+2. All lease vs all purchase
+
+Steven explains that leases result in ongoing revenue, a portion of which remains in the local economy and contributes to household spending. In contrast, land purchases result in a one-time wealth transfer, which typically has minimal economic impact. In contrast, land purchases result in a one-time wealth transfer, which typically has minimal economic impact.
+
+Sarah could provide further breakdowns of the data on purchased versus leased land if it would be useful for refining the analysis.
+
+
+--------------------------------------
+- Can replacement of fossil fuels with RE provide the equivalent contribution to local government revenues. 
+- 79 US counties across 10 states
+- Revenues from fossil fuels far outweigh renewables in aggregate terms, providing more than $1000 per capita annually in dozens of counties. 
+- However, wind and solar in some states generate more local public revenue than fossil fuels per unit of primary energy production.
+- In most counties that depend heavily on fossil fuels for local revenues, solar—but not wind—has the technical potential to replace existing fossil fuel revenues, but this would require dedicating implausibly large portions of developable land (in some cases, more than half) to solar. 
+
+Data
+- 40 000 observations of local government revenue from the energy system, including the production of coal, oil, and natural gas; the transportation and refining of those fuels; electric generation from coal, natural gas, wind, and solar; and the electricity grid. Our data cover 79 energy-producing counties across 10 leading energy-producing states: Alaska, California, Colorado, Montana, North Dakota, New Mexico, Ohio, Texas, West Virginia, and Wyoming. 
+- We chose these states because they are leading energy producers across a wide range of technologies and because our previous work (Newell and Raimi 2018, Raimi et al 2023) suggested that they would have sufficiently granular data to allow us to produce reliable revenue estimates.
+-  We include revenues from land leases (e.g. royalties, lease payments, and rents from public lands), severance taxes, property taxes, electric generation taxes, and—where data were available—payments in lieu of taxes 
+ - We did not seek to include incomes taxes, sales taxes, or other sources, because our previous work indicated that available data would not provide sufficient granularity to understand the contribution of the energy sector at the local level (Newell and Raimi 2018, Raimi et al 2023). We do not consider federal (or state) energy subsidies such as those offered to wind, solar, oil, and gas facilities (Newell et al 2019, Aldy 2021), which in some cases may function as a transfer from the federal level (which provides tax credits on federal income taxes) to the local level (which receives property tax revenues from facilities receiving the federal subsidy).
+- Using these data, we can assess the share of total property taxes derived from the energy system. Among our 79 sample counties, the energy system contributes more than half of total property taxes in 22 counties, with 4 exceeding 90% (North Slope Borough, Alaska, and Campbell, Converse, and Sublette Counties, Wyoming) (figure 2).
+
+
+
+
+
+-------------
+1. Effect on maximizing rural economic impact on the energy transition -- marginally increases cost compared to baseline. 
+2. Effect on siting - shifts in states (what capacity changes), shifts towards low value agricultural lands (what capacity changes, where kind of lands were they previously built), shifts towards large counties (capacity that is shifted)
+3. 
+
+
+
+
+
+
+
+
+
+
+
+
+My ideal abstract.
+
+Fossil fuels are the primary contributor to global climate change, and efforts to reach net-zero emissions will require a dramatic curtailment of their extraction and use. However, fossil fuels fund public services at all levels of government, and research has not assessed whether clean energy sources can provide similar scales of revenue. In this paper, we analyze a novel dataset that we have assembled on how fossil fuels and renewable energy contribute to local governments in 79 US counties across 10 states. Revenues from fossil fuels far outweigh renewables in aggregate terms, providing more than $1000 per capita annually in dozens of counties. However, wind and solar in some states generate more local public revenue than fossil fuels per unit of primary energy production. In most counties that depend heavily on fossil fuels for local revenues, solar—but not wind—has the technical potential to replace existing fossil fuel revenues, but this would require dedicating implausibly large portions of developable land (in some cases, more than half) to solar. For counties with less reliance on fossil fuels, wind and solar can more plausibly replace fossil fuel revenue streams. This finding suggests that while renewable energy will provide new revenue streams for communities, fossil fuel–dependent regions will need to build new tax bases well beyond wind and solar, develop other sources of revenue, or risk a decline in public service provision.
+
+
+
+
+Methods
+Revenue by acre
+1. Fr wheat only 2007 data. Based on the national average yield per acre for 2007 (40.2) and 2020 (49.83), the compound annual growth rate (CAGR) is approximately 1.67%. This means that wheat yields per acre grew at an average annual rate of 1.67% during this period. You can use this value as a reference for your analysis and note it as a calculated growth rate derived from historical data. Let me know if you need help applying this to your analysis.
+2. Calculated 5 year growth rate for all crops.
+
+ 
+
+
