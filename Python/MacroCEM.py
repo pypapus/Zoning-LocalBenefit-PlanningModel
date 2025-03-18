@@ -62,6 +62,7 @@ lbToShortTon = 2000
 def setKeyParameters(interconn):
     # ### RUNNING ON SC OR LOCAL
     runOnSC = False                                     # whether running on supercomputer
+    economic_impacts = True                      # economic impacts to include in Economic iumpacts or to run only zoning
 
     #### STUDY AREA AND METEOROLOGICAL-DEPENDENT DATA
     metYear = 2012 #year of meteorological data used for demand and renewables
@@ -133,6 +134,10 @@ def setKeyParameters(interconn):
     "WI": {2020: 1000000, 2025: 1000000, 2030: 1000000, 2035: 1000000, 2040: 1000000}
     }
 
+    ### TOTAL SOLAR AND WIND GENERATION AS A FRACTION OF TOTAL DEMAND ACROSS ALL STATES AT THE END OF THE MODEL RUN
+    solarGenFracOfDemand = 0
+    windGenFracOfDemand = 0
+
     #MINIMUM SOLAR GENERATION AS FRACTION OF DEMAND BY STATE IN FINAL YEAR (set all these to 0 when running a max solar build scenario, since conflicting constraints will result in an infeasible model)
     stateSolarGenFracOfDemand = {
         "MI": 10,
@@ -156,12 +161,16 @@ def setKeyParameters(interconn):
     solarMaxBuildLoc = 0.5                    # maximum solar that can be built at each location ie. county or subdivision 
     solarMinBuildLoc = 0
     windMinBuildLoc = 0
+
+    # TRANSMISSION DISTANCE BETWEEN SOLAR AND POI
+    tx_distance = 'all' #all or specific distance in miles
     
     # ### WHETHER TO INCLUDE IRA
     ira = True
 
     # ### STATE TO DISCOUNT COST OF SOLAR AND WIND
-    statesToDiscountCost = [''] #states to discount cost of solar and wind, Leave empty if no discount
+    statesToDiscountCost = [''] #states to discount cost of solar and wind, Leave empty if no 
+    capex_discount_rate = 0 #discount rate to apply to CAPEX, if 0, no discount is applied
 
     # ### BUILD SCENARIO
     buildLimitsCase = 1                                 # 1 = reference case,
@@ -172,12 +181,18 @@ def setKeyParameters(interconn):
                                                         # 6 = No Combined Cycle
 
     # ### START YEAR, END YEAR, AND STEPS FOR CE
-    startYear, endYear, yearStepCE = 2020, 2041, 5     # start year, end year, and year step for CE
+    startYear, endYear, yearStepCE = 2020, 2041, 5     # start year, end year, and year step for 
+    
+    162240000/202800000
 
     # ### CO2 EMISSION CAPS AND DACS TREATMENT [https://www.eia.gov/environment/emissions/state/, table 3]
     if interconn == 'ERCOT': co2EmsInitial =  130594820     #METRIC TONS. Initial emission for ERCOT: 130594820.
-    elif interconn == 'EI': co2EmsInitial = 162240000 #202800000 #(modified for states in EI) #final year emissions for EI: 40560000 (80% CO2 reduction)
+    elif interconn == 'EI': co2EmsInitial = 162240000 #used in old mode (162240000); #202800000 #(modified for states in EI) #final year emissions for EI: 40560000 (80% CO2 reduction)
     elif interconn == 'WECC': co2EmsInitial =  248800000    #2019. METRIC TONS. wa,or,ca,nm,az,nv,ut,co,wy,id,mt
+
+    #### CO2 EMISSION CAP IN FINAL YEAR
+    emission_reduction = 0.8
+    if interconn == 'EI': co2EmsInFinalYear = co2EmsInitial * (1 - emission_reduction)
 
     yearIncDACS = 2050                                  #year to include DACS - set beyond end period if don't want DACS
 
@@ -245,7 +260,9 @@ def setKeyParameters(interconn):
             runCE, runFirstYear, metYear, ptEligRetCF, stoMinSOC, reDownFactor, demandShifter, demandShiftingBlock,
             runOnSC, yearIncDACS, electrifiedDemand, elecDemandScen, balAuths, states, jurisdiction, reTypeScenario, 
             Land_use, power_density, tracking, reSourceMERRA, transmissionEff, removeHydro, sitestoFilter, siteLeastCap, ira, 
-            allSolarMaxBuild, solarMaxBuildLoc, stateCap, stateSolarGenFracOfDemand, initialstateSolarGenFracOfDemand, statesToDiscountCost) 
+            allSolarMaxBuild, solarMaxBuildLoc, stateCap, stateSolarGenFracOfDemand, initialstateSolarGenFracOfDemand, 
+            statesToDiscountCost, economic_impacts, tx_distance, co2EmsInFinalYear, capex_discount_rate,
+            solarGenFracOfDemand, windGenFracOfDemand) 
 
 #################################################
 def importParcelsRegionZoning():
@@ -302,7 +319,7 @@ def defineReserveParameters(stoMkts,stoFTLabels):
 #Main function to call. 
 #Inputs: interconnection (EI, WECC, ERCOT); CO2 emissions in final year as fraction
 #of initial CO2 emissions.
-def runMacroCEM(interconn,co2EmsInFinalYear,solarGenFracOfDemand,windGenFracOfDemand,scenario_key,economic_impacts, eim_measure, tx_distance, capex_discount_rate, costWgt=None):
+def runMacroCEM(interconn,solarGenFracOfDemand,windGenFracOfDemand,scenario_key,costWgt=None):
     # Import key parameters
     (buildLimitsCase, greenField, includeRes, useCO2Price, runCE, ceOps, stoInCE, seasStoInCE, ucOrED, numBlocks,
     daysPerBlock, daysPerPeak, fullYearCE, incNuc, compressFleet, fuelPrices, co2EmsInitial,
@@ -312,7 +329,9 @@ def runMacroCEM(interconn,co2EmsInFinalYear,solarGenFracOfDemand,windGenFracOfDe
     runCE, runFirstYear, metYear, ptEligRetCF, stoMinSOC, reDownFactor, demandShifter, demandShiftingBlock,
     runOnSC, yearIncDACS, electrifiedDemand, elecDemandScen, balAuths, states, jurisdiction, reTypeScenario, 
     Land_use, power_density, tracking, reSourceMERRA, transmissionEff, removeHydro, sitestoFilter, siteLeastCap, 
-    ira, allSolarMaxBuild, solarMaxBuildLoc, stateCap, stateSolarGenFracOfDemand,initialstateSolarGenFracOfDemand,statesToDiscountCost) = setKeyParameters(interconn)
+    ira, allSolarMaxBuild, solarMaxBuildLoc, stateCap, stateSolarGenFracOfDemand,initialstateSolarGenFracOfDemand,
+    statesToDiscountCost, economic_impacts, tx_distance, co2EmsInFinalYear, 
+    solarGenFracOfDemand, windGenFracOfDemand) = setKeyParameters(interconn)
 
     (regLoadFrac, contLoadFrac, regErrorPercentile, flexErrorPercentile, regElig, contFlexInelig, regCostFrac,
         rrToRegTime, rrToFlexTime, rrToContTime) = defineReserveParameters(stoMkts, stoFTLabels)
@@ -322,13 +341,12 @@ def runMacroCEM(interconn,co2EmsInFinalYear,solarGenFracOfDemand,windGenFracOfDe
     buildScen = {1:'Ref', 2:'Nuc',3: 'NucCCS', 4: 'H2', 5: 'Trans'}[buildLimitsCase]
     if costWgt == None:
         costWgt = 1
-    # resultsDirAll = 'Results_' + scenario_key + '_SGenFrac' + str(int(solarGenFracOfDemand)) + '_WGenFrac' + str(int(windGenFracOfDemand)) + '_' + interconn + '_CO2Final_' + str(int(co2EmsInFinalYear)) + '_' + economic_impacts + '_' + eim_measure + '_' + tx_distance + '_CAPEX_' + str(int(capex_discount_rate)) +'_costWgt_' + str(float(costWgt))
     resultsDirAll = (
-    f"Results_{scenario_key}_SGenFrac{int(solarGenFracOfDemand)}"
-    f"_WGenFrac{int(windGenFracOfDemand)}_{interconn}_CO2Final_{int(co2EmsInFinalYear)}"
-    f"_{economic_impacts}_{eim_measure}_{tx_distance}_CAPEX_{float(capex_discount_rate)}"
+    f"Results_{scenario_key}"
+    f"_{interconn}"
     f"_costWgt_{float(costWgt)}"
     ) 
+
     if not os.path.exists(resultsDirAll): os.makedirs(resultsDirAll)
     pd.Series(co2EmsInitial).to_csv(os.path.join(resultsDirAll,'initialCO2Ems.csv'))
 
@@ -399,7 +417,7 @@ def runMacroCEM(interconn,co2EmsInFinalYear,solarGenFracOfDemand,windGenFracOfDe
                                                                 lineLimits, lineDists, lineCosts, contFlexInelig, ira, buildLimitsCase, 
                                                                 electrifiedDemand, elecDemandScen, reSourceMERRA, stoFTLabels, transmissionEff, 
                                                                 removeHydro,sitestoFilter, siteLeastCap,pRegionShapes,subdivShapes, countyShapes, states, economic_impacts, 
-                                                                costWgt, tx_distance, allSolarMax, solarMaxBuildLoc, MI_cap, IL_cap, MN_cap, IN_cap, OH_cap, WI_cap, eim_measure, 
+                                                                costWgt, tx_distance, allSolarMax, solarMaxBuildLoc, MI_cap, IL_cap, MN_cap, IN_cap, OH_cap, WI_cap, 
                                                                 currMISolarGenFracOfDemand, currILSolarGenFracOfDemand, currMNSolarGenFracOfDemand, currINSolarGenFracOfDemand, 
                                                                 currOHSolarGenFracOfDemand, currWISolarGenFracOfDemand, statesToDiscountCost, capex_discount_rate)
 
@@ -468,7 +486,7 @@ def runCapacityExpansion(genFleet, demand, startYear, endYear, yearStepCE, currY
                          power_density, jurisdiction, tracking, lineLimits, lineDists, lineCosts, contFlexInelig, ira, buildLimitsCase, 
                          electrifiedDemand, elecDemandScen, reSourceMERRA, stoFTLabels, transmissionEff, removeHydro, sitestoFilter, 
                          siteLeastCap,pRegionShapes,subdivShapes, countyShapes, states,economic_impacts, costWgt, tx_distance, allSolarMax, solarMaxBuildLoc,
-                         MI_cap, IL_cap, MN_cap, IN_cap, OH_cap, WI_cap, eim_measure, currMISolarGenFracOfDemand, currILSolarGenFracOfDemand, currMNSolarGenFracOfDemand, 
+                         MI_cap, IL_cap, MN_cap, IN_cap, OH_cap, WI_cap, currMISolarGenFracOfDemand, currILSolarGenFracOfDemand, currMNSolarGenFracOfDemand, 
                          currINSolarGenFracOfDemand, currOHSolarGenFracOfDemand, currWISolarGenFracOfDemand, statesToDiscountCost, capex_discount_rate):
     # Create results directory and save initial inputs
     resultsDir = os.path.join(resultsDirOrig, 'CE')
@@ -489,7 +507,6 @@ def runCapacityExpansion(genFleet, demand, startYear, endYear, yearStepCE, currY
         'WI': currWISolarGenFracOfDemand
     }).to_csv(os.path.join(resultsDir,'solarMinStateGenCE' + str(currYear) + '.csv'))
       
- 
 
     # Update new technology and fuel price data    
     newTechsCE = getNewTechs(regElig, regCostFrac, currYear, stoInCE, seasStoInCE,
@@ -589,12 +606,8 @@ def runCapacityExpansion(genFleet, demand, startYear, endYear, yearStepCE, currY
     ceTimeDependentConstraints(db, hoursForCE, blockWeights, socScalars, ceOps, onOffInitialEachPeriod, 
                 genSet, genFleetForCE, stoGenSet,stoGenSymbols, newTechsCE, stoTechSet, stoTechSymbols, initSOCFraction,
                 hydroGenCE, zoneSet)
-    if economic_impacts == "EIMs" and eim_measure == "ValueAdded":
-        capacExpModel, ms, ss = runGAMS('EIMvalueAdded_CEWith{o}.gms'.format(o=ceOps), ws, db)
-    elif economic_impacts == "EIMs" and eim_measure == "PropTax":
-        capacExpModel, ms, ss = runGAMS('EIMpropTax_CEWith{o}.gms'.format(o=ceOps), ws, db)
-    elif economic_impacts == "EIMs" and eim_measure == "TaxAndValue":
-        capacExpModel, ms, ss = runGAMS('EIMall_CEWith{o}.gms'.format(o=ceOps), ws, db)
+    if economic_impacts == True:
+        capacExpModel, ms, ss = runGAMS('EIM_CEWith{o}.gms'.format(o=ceOps), ws, db)
     else:
         capacExpModel, ms, ss = runGAMS('CEWith{o}.gms'.format(o=ceOps), ws, db)
 
