@@ -86,68 +86,6 @@ def getNewRenewableCFs(genFleet, tgtTz, reYear, currYear, reDownFactor, reSource
     newCfs = pd.concat([windCfs, solarCfs], axis=1)
     return newCfs, maxCapWind, maxCapSolar 
 
-# cfs = pd.read_csv(r'E:\papa_yaw\EIM\Results_scenario18e_S0_W0_EI_40560000_EIMs_all_costWgt_1.0\2040CO2cap40\CE\windAndSolarNewCFsCE2040.csv', index_col=0)
-# cfs = pd.read_csv(r'C:\Users\owusup\Desktop\Model\MacroCEM_EIM\Python\ResultspropTax_scenario18e_S0_W0_EI_40560000_EIMs_all_costWgt_1.0\2025CO2cap162\CE\windSolarNewCFsFullYr2025.csv', index_col=0)
-# cfs= cfs.T
-# # cfs = pd.read_csv(r'E:\papa_yaw\EIM\Results_scenario18e_S0_W0_EI_40560000_EIMs_all_costWgt_1.0\2025CO2Cap162\CE\windSolarNewCFsFullYr2025.csv', index_col=0)
-# cfs['mean'] = cfs.mean(axis=1)
-# cfs = cfs[['mean']].reset_index()
-# cfs.reset_index(inplace=True)
-# cfs['tech'] = cfs['index'].apply(lambda x: 'Solar' if 'solar' in x else ('Wind' if 'wind' in x else 'Unknown'))
-# cfs_solar = cfs[cfs['tech']=='Solar']
-# cfs_solar['lat'] = cfs_solar['index'].str.extract(r'lat([-\d.]+)').astype(float)
-# cfs_solar['lon'] = cfs_solar['index'].str.extract(r'lon([-\d.]+)').astype(float)
-# cfs_solar = cfs_solar.drop(columns=['index'])
-
-# # import geopandas as gpd
-# cfs_solar = gpd.GeoDataFrame(cfs_solar, geometry=gpd.points_from_xy(cfs_solar.lon, cfs_solar.lat))
-# counties = gpd.GeoDataFrame(counties, geometry='geometry')
-
-# cfs_solar_ = gpd.sjoin(cfs_solar, counties, how='right', op='intersects')
-# #remove nan values in mean
-# cfs_solar_ = cfs_solar_[cfs_solar_['mean'].notna()]
-# cfs_solar__ = cfs_solar_[~(cfs_solar_['mean']==0)]
-
-# #plot the mean
-# import matplotlib.pyplot as plt
-# plt.style.use('seaborn-white')
-# # Plot of the mean capacity factor
-# fig, ax = plt.subplots(figsize=(10, 10))  # Adjust these values to your preferred size
-# cfs_solar__.plot(column='mean', 
-#              cmap='viridis', 
-#              legend=True,
-#              linewidth=0.8, ax=ax)
-# counties.boundary.plot(ax=ax, linewidth=0.8)
-# plt.show()
-
-
-# solarCfs = solarCfs.T
-# solarCfs['mean'] = solarCfs.mean(axis=1)
-# solarCfs = solarCfs[['mean']].reset_index()
-
-# solarCfs['lat'] = solarCfs['time'].str.extract(r'lat([-\d.]+)').astype(float)
-# solarCfs['lon'] = solarCfs['time'].str.extract(r'lon([-\d.]+)').astype(float)
-
-# # Drop the original 'time' column
-# solarCfs = solarCfs.drop(columns=['time'])
-
-# import geopandas as gpd
-# solarCfs = gpd.GeoDataFrame(solarCfs, geometry=gpd.points_from_xy(solarCfs.lon, solarCfs.lat))
-# counties = gpd.GeoDataFrame(counties, geometry='geometry')
-
-# #plot the mean
-# import matplotlib.pyplot as plt
-# plt.style.use('seaborn-white')
-# # Plot of the mean capacity factor
-# fig, ax = plt.subplots(figsize=(10, 10))  # Adjust these values to your preferred size
-# solarCfs.plot(column='mean', 
-#              cmap='OrRd', 
-#              legend=True,
-#              linewidth=0.8, ax=ax)
-# counties.boundary.plot(ax=ax, linewidth=0.8)
-# plt.show()
-
-
 
 def calcNewCfs(existingSubdivCap, cfbyRegion, re, currYear, scenario_key, reTypeScenario, Land_use, 
                zoningData,parcels,regions, jurisdiction, power_densities, sitestoFilter,siteLeastCap,states, tx_distance,

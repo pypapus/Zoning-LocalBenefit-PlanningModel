@@ -23,7 +23,7 @@ def getEconomicImpacts(jurisdiction, currYear):
         economicImpacts = economicImpacts.drop(columns=['COUSUB_NAME', 'STATEFP','COUNTYFP','FIPS',
                                                         'COUSUBFP','COUNTY_NAME','STATE'])
     elif jurisdiction == 'county':
-        economicImpacts = pd.read_excel(os.path.join(file_path, 'county_impacts.xlsx'), sheet_name = str(currYear))
+        economicImpacts = pd.read_excel(os.path.join(file_path, 'PV Economomics SRM.xlsm'), sheet_name = f"County_{currYear}")
         economicImpacts =  economicImpacts.drop(columns=['STATEFP', 'COUNTYFP','COUNTY_NAME','STATE',
                                                         'GEOGRAPHY','State','County'])
     economicImpacts = economicImpacts.rename(columns = {'FIPS':'GEOID'})

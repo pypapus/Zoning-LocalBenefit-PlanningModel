@@ -152,10 +152,9 @@ def addStateSolarMaxBuildParams(db, MI_cap, IL_cap, MN_cap, IN_cap, OH_cap, WI_c
 # # local share of expenditure from installation, operation, and decommissioning    
 def addEconomicImpactParams(db,df,solarTechSet,mwToGW):
     solartechs = df.loc[df['FuelType']=='Solar']
-    add1dParam(db,getGenParamDict(solartechs,'Phase1_Value_added',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pOccValue')
-    add1dParam(db,getGenParamDict(solartechs,'phase2_Value_added',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pFomValue')
-    add1dParam(db,getGenParamDict(solartechs,'Phase3_Value_added',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pDecomValue')
-    add1dParam(db,getGenParamDict(solartechs,'propTax_Total',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pPropTax')
+    add1dParam(db,getGenParamDict(solartechs,'Net_Installation',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pOccValue')
+    add1dParam(db,getGenParamDict(solartechs,'Net_Operating',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pFomValue')
+    add1dParam(db,getGenParamDict(solartechs,'Net_Operating',mwToGW/1000),solarTechSet,solartechs['GAMS Symbol'],'pDecomValue')
 
 #Transmission cost for solar and wind
 def addNewRenewTxCostParams(db,df,renewTechSet,mwToGW):
