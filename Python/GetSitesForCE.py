@@ -51,12 +51,14 @@ def scenariosites(reTypeScenario, Land_use, zoningData, parcels, regions, jurisd
     
  
 def getDistancetoTransmission(tx_distance):
-    distance_to_transmission = pd.read_csv(os.path.join('Data', 'Transmission_cost','Final','least_distance_rating_tx.csv'), index_col=0)
-    if tx_distance =='tx2mi':
-        #filter by 2mi distance to transmission
-        distance_to_transmission = distance_to_transmission[distance_to_transmission['Least Distance(miles)'] <= 2]
-    else :
+    distance_to_transmission = pd.read_csv(os.path.join('Data', 'Transmission_cost', 'Final', 'least_distance_rating_tx.csv'), index_col=0)
+    if isinstance(tx_distance, (int, float)):  # Check if tx_distance is a number
+        # Filter by the specified distance to transmission
+        distance_to_transmission = distance_to_transmission[distance_to_transmission['Least Distance(miles)'] <= tx_distance]
+    elif tx_distance == 'all':  # If tx_distance is 'all', take all rows
         distance_to_transmission = distance_to_transmission
+    else:
+        raise ValueError("Invalid value for tx_distance. It must be a number or 'all'.")
     return distance_to_transmission.reset_index()
 
 
