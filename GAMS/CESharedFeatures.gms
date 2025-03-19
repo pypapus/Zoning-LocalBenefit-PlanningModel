@@ -155,7 +155,7 @@ $load pCostWeight, pBenefitWeight, pSolarMaxCap, pAllSolarMaxCap, pMISolarMaxCap
 $load pNMaxWind, pNMaxSolar, pNMaxNuclear, pNMaxCC, pNMaxCCS, pNMaxDACS, pPMaxSto, pEMaxSto, pSolarGenAsFracOfDemand, pWindGenAsFracOfDemand, pSolarMinCap, pWindMinCap, pCapactech, pHrtech, pOpcosttech
 $load pMISolarGenAsFracOfDemand, pILSolarGenAsFracOfDemand, pMNSolarGenAsFracOfDemand, pINSolarGenAsFracOfDemand, pOHSolarGenAsFracOfDemand, pWISolarGenAsFracOfDemand
 $load pFom, pOcc, pPowOcc, pEneOcc, pRampratetech, pCO2emratetech, pTxc
-$load pOccValue, pFomValue, pDecomValue, pPropTax
+$load pOccValue, pFomValue, pDecomValue
 $load pEfficiencytech
 $load pCO2emcap, pCf, pR, pLife, pLifeline
 $load pGenzonetech, pLinecost, pNMaxLine
