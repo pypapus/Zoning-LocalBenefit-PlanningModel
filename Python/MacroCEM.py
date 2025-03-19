@@ -319,7 +319,7 @@ def defineReserveParameters(stoMkts,stoFTLabels):
 #Main function to call. 
 #Inputs: interconnection (EI, WECC, ERCOT); CO2 emissions in final year as fraction
 #of initial CO2 emissions.
-def runMacroCEM(interconn,solarGenFracOfDemand,windGenFracOfDemand,scenario_key,costWgt=None):
+def runMacroCEM(interconn,scenario_key,costWgt=None):
     # Import key parameters
     (buildLimitsCase, greenField, includeRes, useCO2Price, runCE, ceOps, stoInCE, seasStoInCE, ucOrED, numBlocks,
     daysPerBlock, daysPerPeak, fullYearCE, incNuc, compressFleet, fuelPrices, co2EmsInitial,
@@ -330,7 +330,7 @@ def runMacroCEM(interconn,solarGenFracOfDemand,windGenFracOfDemand,scenario_key,
     runOnSC, yearIncDACS, electrifiedDemand, elecDemandScen, balAuths, states, jurisdiction, reTypeScenario, 
     Land_use, power_density, tracking, reSourceMERRA, transmissionEff, removeHydro, sitestoFilter, siteLeastCap, 
     ira, allSolarMaxBuild, solarMaxBuildLoc, stateCap, stateSolarGenFracOfDemand,initialstateSolarGenFracOfDemand,
-    statesToDiscountCost, economic_impacts, tx_distance, co2EmsInFinalYear, 
+    statesToDiscountCost, economic_impacts, tx_distance, co2EmsInFinalYear, capex_discount_rate,
     solarGenFracOfDemand, windGenFracOfDemand) = setKeyParameters(interconn)
 
     (regLoadFrac, contLoadFrac, regErrorPercentile, flexErrorPercentile, regElig, contFlexInelig, regCostFrac,
