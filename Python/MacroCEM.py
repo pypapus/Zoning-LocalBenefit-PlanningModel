@@ -97,21 +97,21 @@ def setKeyParameters(interconn):
     siteLeastCap = 5                                # minimum capacity of subdivision (MW)
     sitestoFilter = 100                             # percentile of sites to consider
 
-    # allSolarMaxBuild = {                    # maximum solar build in each model run (GW)
-    #     2020: 1000, 
-    #     2025: 10,
-    #     2030: 29,
-    #     2035: 10,
-    #     2040: 13
-    # }  
+
+    # YearAddedCE
+        # 2025     9.014475
+        # 2030    28.573480
+        # 2035     9.804466
+        # 2040    12.383343
+        # Name: EIMs_1.0, dtype: float64 
 
     allSolarMaxBuild = {                    # maximum solar build in each model run (GW)
-        2020: 1000, 
-        2025: 1000,
-        2030: 1000,
-        2035: 1000,
-        2040: 1000
-    } 
+        2020: 1000,
+        2025: 9.1, 
+        2030: 28.6,
+        2035: 10,
+        2020: 12.5
+    }  
 
     #################STATE PARAMETERS########################################################
 
@@ -424,7 +424,7 @@ def runMacroCEM(interconn,scenario_key,costWgt=None):
         # Run dispatch
         if (ucOrED != 'None') and ((currYear == startYear and runFirstYear) or (currYear > startYear)):
             print('Starting dispatch')
-            runDispatch(genFleet, demandProfile, currYear, demandShifter, demandShiftingBlock, fuelPrices, currCo2Cap, useCO2Price,
+            runDispatch(genFleet, demandProfile, currYear, demandShifter, demandShiftingBlock, fuelPrices, currCo2Cap, useCO2Price, # type: ignore
                         tzAnalysis, resultsDir, stoMkts, metYear, regLoadFrac, contLoadFrac, interconn, regErrorPercentile, reSourceMERRA,
                         flexErrorPercentile, includeRes, rrToRegTime, rrToFlexTime, rrToContTime, regCostFrac,
                         ucOrED, initSOCFraction, includeRes)
@@ -461,7 +461,7 @@ def getInitialFleetDemandTransmission(startYear, fuelPrices, electrifiedDemand, 
     genFleet = compressAndAddSizeDependentParams(genFleet, compressFleet, regElig, contFlexInelig, regCostFrac, stoFTLabels, stoPTLabels)
     # If greenfield, elim existing generator fleet except tiny NG, wind, & solar plant (to avoid crash).
     # If not greenfield, extract hydropower units to factor out their generation from demand later. 
-    if greenField: genFleet = stripDownGenFleet(genFleet, greenField)
+    if greenField: genFleet = stripDownGenFleet(genFleet, greenField) # type: ignore
 
     genFleet.to_csv(os.path.join(resultsDir,'genFleetInitial.csv'))
 
